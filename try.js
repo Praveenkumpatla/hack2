@@ -57,4 +57,24 @@ port.post("/amazon",async function (req,res){
     res.json(result)
   })})
 
+port.post("/snapdeal",async function (req,res){
+    axios.get(req.body.url).then((response) => {
+      let result = []
+      const $ = cheerio.load(response.data)
+      const urlElems = $('div.product-tuple-listing')
+      for (let i = 0; i < urlElems.length; i++) {
+        const title = $(urlElems[i]).find('p.product-title')
+        const rating = $(urlElems[i]).find('span.product-rating')
+        const fprice = $(urlElems[i]).find('span.product-price')
+        const aprice = $(urlElems[i]).find('span.product-desc-price')
+        const image = $(urlElems[i]).find('input.compareImg')
+        if (title) {
+          const urlText = $(title).text()
+          var fdata = {"image": $(image).attr('value'),urlText,"rating":$(rating).text(),"aprice":$(aprice).text(),"fprice":$(fprice).text()}
+          result.push(fdata)
+        }
+      }
+      res.json(result)
+    })})
+
 port.listen(process.env.PORT || 8080,()=>{console.log("server is running")})
