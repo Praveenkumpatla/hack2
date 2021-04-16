@@ -8,6 +8,10 @@ const cors = require("cors");
 port.use(cors())
 port.use(express.json())
 
+port.get("/",(req,res)=>{
+  res.json("working")
+})
+
 port.post("/flipkart",async function (req,res){
 axios.get(req.body.url).then((response) => {
   let result = []
